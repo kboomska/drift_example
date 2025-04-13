@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:drift_example/src/common/database/database.dart';
+import 'package:drift_example/src/core/app_database/app_database.dart';
 import 'package:flutter/widgets.dart';
 
 void main() async {
