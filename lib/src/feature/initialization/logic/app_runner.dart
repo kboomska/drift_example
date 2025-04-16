@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:clock/clock.dart';
 import 'package:drift_example/src/core/app_database/app_database.dart';
+import 'package:drift_example/src/feature/initialization/widget/material_context.dart';
 import 'package:flutter/widgets.dart';
 
 /// {@template app_runner}
@@ -22,22 +23,11 @@ class AppRunner {
 
         Future<void> launchApplication() async {
           try {
+            // TODO(Kuzmin): Add dependencies scope.
             // Initialize dependencies.
             final database = AppDatabase();
 
-            await database
-                .into(database.todoItems)
-                .insert(
-                  TodoItemsCompanion.insert(
-                    title: 'todo: finish drift setup',
-                    content:
-                        'We can now write queries and define our own tables.',
-                  ),
-                );
-            List<TodoItem> allItems =
-                await database.select(database.todoItems).get();
-
-            log('Items in database: $allItems');
+            runApp(MaterialContext());
           } on Object catch (e, stackTrace) {
             log(
               '${clock.now()} Initialization failed',
