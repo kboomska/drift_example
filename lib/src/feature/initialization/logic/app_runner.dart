@@ -3,7 +3,8 @@ import 'dart:developer';
 
 import 'package:clock/clock.dart';
 import 'package:drift_example/src/core/app_database/app_database.dart';
-import 'package:drift_example/src/feature/initialization/widget/material_context.dart';
+import 'package:drift_example/src/feature/initialization/model/dependencies_container.dart';
+import 'package:drift_example/src/feature/initialization/widget/root_context.dart';
 import 'package:flutter/widgets.dart';
 
 /// {@template app_runner}
@@ -23,11 +24,13 @@ class AppRunner {
 
         Future<void> launchApplication() async {
           try {
-            // TODO(Kuzmin): Add dependencies scope.
             // Initialize dependencies.
             final database = AppDatabase();
 
-            runApp(MaterialContext());
+            // Create the dependencies container.
+            final dependencies = DependenciesContainer(appDatabase: database);
+
+            runApp(RootContext(dependenciesContainer: dependencies));
           } on Object catch (e, stackTrace) {
             log(
               '${clock.now()} Initialization failed',
