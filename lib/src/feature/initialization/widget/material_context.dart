@@ -1,3 +1,4 @@
+import 'package:drift_example/src/feature/home/widget/home_screen.dart';
 import 'package:flutter/material.dart';
 
 /// {@template material_context}
@@ -19,7 +20,7 @@ class MaterialContext extends StatelessWidget {
 
     return MaterialApp(
       // TODO(Kuzmin): Add locale and theme.
-      home: Placeholder(),
+      home: HomeScreen(),
       builder: (context, child) {
         return MediaQuery(
           key: _globalKey,
