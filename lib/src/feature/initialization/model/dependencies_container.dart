@@ -1,14 +1,12 @@
-import 'package:drift_example/src/core/app_database/app_database.dart';
+import 'package:drift_example/src/feature/tasks/data/tasks_repository.dart';
 
 /// {@template dependencies_container}
 /// Container used to reuse dependencies across the application.
-///
-/// {@macro composition_process}
 /// {@endtemplate}
 class DependenciesContainer {
   /// {@macro dependencies_container}
-  const DependenciesContainer({required this.appDatabase});
+  const DependenciesContainer({required this.tasksRepository});
 
-  /// [AppDatabase] instance, used to store application data.
-  final AppDatabase appDatabase;
+  /// [TasksRepository] instance, used to insert and watch todo tasks.
+  final TasksRepository tasksRepository;
 }
