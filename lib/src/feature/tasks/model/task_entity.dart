@@ -2,19 +2,27 @@
 /// Todo task entity.
 /// {@endtemplate}
 class TaskEntity {
+  final int? id;
   final String title;
   final String content;
   final DateTime? createdAt;
 
   /// {@macro task_entity}
   TaskEntity({
+    this.id,
     required this.title,
     required this.content,
-    required this.createdAt,
+    this.createdAt,
   });
 
-  TaskEntity copyWith({String? title, String? content, DateTime? createdAt}) {
+  TaskEntity copyWith({
+    int? id,
+    String? title,
+    String? content,
+    DateTime? createdAt,
+  }) {
     return TaskEntity(
+      id: id ?? this.id,
       title: title ?? this.title,
       content: content ?? this.content,
       createdAt: createdAt ?? this.createdAt,
@@ -22,18 +30,25 @@ class TaskEntity {
   }
 
   @override
-  String toString() =>
-      'TasksEntity(title: $title, content: $content, createdAt: $createdAt)';
+  String toString() {
+    return 'TaskEntity(id: $id'
+        ', title: $title'
+        ', content: $content'
+        ', createdAt: $createdAt)';
+  }
 
   @override
   bool operator ==(covariant TaskEntity other) {
     if (identical(this, other)) return true;
 
-    return other.title == title &&
+    return other.id == id &&
+        other.title == title &&
         other.content == content &&
         other.createdAt == createdAt;
   }
 
   @override
-  int get hashCode => title.hashCode ^ content.hashCode ^ createdAt.hashCode;
+  int get hashCode {
+    return id.hashCode ^ title.hashCode ^ content.hashCode ^ createdAt.hashCode;
+  }
 }

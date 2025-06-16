@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:drift_example/src/core/app_database/app_database.dart';
 import 'package:drift_example/src/feature/tasks/data/tasks_data_source.dart';
 import 'package:drift_example/src/feature/tasks/model/task_entity.dart';
@@ -10,7 +11,7 @@ abstract interface class TasksRepository {
   Stream<List<TaskEntity>> watch();
 
   /// Insert task.
-  Future<void> insert(String title, String content);
+  Future<void> insert(TaskEntity entity);
 }
 
 /// {@macro tasks_repository}
@@ -26,11 +27,12 @@ class TasksRepositoryImpl implements TasksRepository {
   Stream<List<TaskEntity>> watch() {
     final tasks = _dataSource.watch();
 
-    return tasks.asyncMap(
-      (dto) =>
-          dto
+    return tasks.map(
+      (todoItems) =>
+          todoItems
               .map(
                 (todo) => TaskEntity(
+                  id: todo.id,
                   title: todo.title,
                   content: todo.content,
                   createdAt: todo.createdAt,
@@ -41,9 +43,13 @@ class TasksRepositoryImpl implements TasksRepository {
   }
 
   @override
-  Future<void> insert(String title, String content) async {
+  Future<void> insert(TaskEntity entity) async {
     _dataSource.insert(
-      TodoItemsCompanion.insert(title: title, content: content),
+      TodoItemsCompanion.insert(
+        title: entity.title,
+        content: entity.content,
+        createdAt: Value(entity.createdAt),
+      ),
     );
   }
 }
