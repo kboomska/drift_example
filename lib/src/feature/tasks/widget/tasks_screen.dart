@@ -17,12 +17,14 @@ class TasksScreen extends StatefulWidget {
 class _TasksScreenState extends State<TasksScreen> {
   late final TasksRepository tasksRepository;
   late final Stream<List<TaskEntity>> currentTasks;
+  late final ScrollController controller;
 
   @override
   void initState() {
     super.initState();
     tasksRepository = DependenciesScope.of(context).tasksRepository;
     currentTasks = tasksRepository.watch();
+    controller = ScrollController();
   }
 
   @override
@@ -38,6 +40,14 @@ class _TasksScreenState extends State<TasksScreen> {
     );
 
     await tasksRepository.insert(task);
+
+    if (controller.offset != 0) {
+      controller.animateTo(
+        0.0,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.bounceIn,
+      );
+    }
   }
 
   @override
@@ -50,6 +60,7 @@ class _TasksScreenState extends State<TasksScreen> {
           final tasks = snapshot.data ?? [];
 
           return ListView.builder(
+            controller: controller,
             itemCount: tasks.length,
             itemBuilder: (context, index) {
               final task = tasks[tasks.length - index - 1];
