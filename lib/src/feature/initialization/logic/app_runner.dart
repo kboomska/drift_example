@@ -5,8 +5,6 @@ import 'package:clock/clock.dart';
 import 'package:drift_example/src/core/app_database/app_database.dart';
 import 'package:drift_example/src/feature/initialization/model/dependencies_container.dart';
 import 'package:drift_example/src/feature/initialization/widget/root_context.dart';
-import 'package:drift_example/src/feature/tasks/data/tasks_data_source.dart';
-import 'package:drift_example/src/feature/tasks/data/tasks_repository.dart';
 import 'package:flutter/widgets.dart';
 
 /// {@template app_runner}
@@ -28,15 +26,9 @@ class AppRunner {
           try {
             // Initialize dependencies.
             final database = AppDatabase();
-            final tasksDataSource = TasksDataSourceImpl(database);
-            final tasksRepository = TasksRepositoryImpl(
-              dataSource: tasksDataSource,
-            );
 
             // Create the dependencies container.
-            final dependencies = DependenciesContainer(
-              tasksRepository: tasksRepository,
-            );
+            final dependencies = DependenciesContainer(database: database);
 
             runApp(RootContext(dependenciesContainer: dependencies));
           } on Object catch (e, stackTrace) {

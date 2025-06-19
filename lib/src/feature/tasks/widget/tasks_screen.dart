@@ -1,4 +1,4 @@
-import 'package:drift_example/src/feature/tasks/model/task_entity.dart';
+import 'package:drift_example/src/feature/tasks/widget/tasks_list.dart';
 import 'package:drift_example/src/feature/tasks/widget/tasks_scope.dart';
 import 'package:flutter/material.dart';
 
@@ -14,13 +14,13 @@ class TasksScreen extends StatefulWidget {
 }
 
 class _TasksScreenState extends State<TasksScreen> {
-  late final TasksScopeController controller;
+  late final TasksState state;
   late final ScrollController scrollController;
 
   @override
   void initState() {
     super.initState();
-    controller = TasksScope.getController(context);
+    state = TasksScope.getState(context);
     scrollController = ScrollController();
   }
 
@@ -30,39 +30,25 @@ class _TasksScreenState extends State<TasksScreen> {
     super.dispose();
   }
 
+  void scrollTo(double offset) {
+    if (scrollController.offset != 0) {
+      scrollController.animateTo(
+        offset,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.bounceIn,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Drift example app')),
-      body: StreamBuilder<List<TaskEntity>>(
-        stream: controller.stream,
-        builder: (context, snapshot) {
-          final tasks = snapshot.data ?? [];
-
-          return ListView.builder(
-            controller: scrollController,
-            itemCount: tasks.length,
-            itemBuilder: (context, index) {
-              final task = tasks[tasks.length - index - 1];
-
-              return ListTile(
-                title: Text(task.title),
-                subtitle: Text('${task.content} ${task.id}'),
-              );
-            },
-          );
-        },
-      ),
+      body: TasksList(scrollController: scrollController),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          controller.addTask('Another todo', 'Some description...');
-          if (scrollController.offset != 0) {
-            scrollController.animateTo(
-              0.0,
-              duration: Duration(milliseconds: 300),
-              curve: Curves.bounceIn,
-            );
-          }
+        onPressed: () async {
+          await state.addTask('Another todo', 'Some description...');
+          scrollTo(0);
         },
         child: Icon(Icons.add),
       ),
