@@ -1,6 +1,5 @@
-import 'package:drift_example/src/feature/initialization/widget/dependencies_scope.dart';
-import 'package:drift_example/src/feature/tasks/data/tasks_repository.dart';
 import 'package:drift_example/src/feature/tasks/model/task_entity.dart';
+import 'package:drift_example/src/feature/tasks/widget/tasks_scope.dart';
 import 'package:flutter/material.dart';
 
 /// {@template tasks_screen}
@@ -15,39 +14,20 @@ class TasksScreen extends StatefulWidget {
 }
 
 class _TasksScreenState extends State<TasksScreen> {
-  late final TasksRepository tasksRepository;
-  late final Stream<List<TaskEntity>> currentTasks;
-  late final ScrollController controller;
+  late final TasksScopeController controller;
+  late final ScrollController scrollController;
 
   @override
   void initState() {
     super.initState();
-    tasksRepository = DependenciesScope.of(context).tasksRepository;
-    currentTasks = tasksRepository.watch();
-    controller = ScrollController();
+    controller = TasksScope.getController(context);
+    scrollController = ScrollController();
   }
 
   @override
   void dispose() {
+    scrollController.dispose();
     super.dispose();
-  }
-
-  void _addTask() async {
-    final task = TaskEntity(
-      title: 'Another todo',
-      content: 'Some description...',
-      createdAt: DateTime.now(),
-    );
-
-    await tasksRepository.insert(task);
-
-    if (controller.offset != 0) {
-      controller.animateTo(
-        0.0,
-        duration: Duration(milliseconds: 300),
-        curve: Curves.bounceIn,
-      );
-    }
   }
 
   @override
@@ -55,12 +35,12 @@ class _TasksScreenState extends State<TasksScreen> {
     return Scaffold(
       appBar: AppBar(title: Text('Drift example app')),
       body: StreamBuilder<List<TaskEntity>>(
-        stream: currentTasks,
+        stream: controller.stream,
         builder: (context, snapshot) {
           final tasks = snapshot.data ?? [];
 
           return ListView.builder(
-            controller: controller,
+            controller: scrollController,
             itemCount: tasks.length,
             itemBuilder: (context, index) {
               final task = tasks[tasks.length - index - 1];
@@ -74,7 +54,16 @@ class _TasksScreenState extends State<TasksScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addTask,
+        onPressed: () {
+          controller.addTask('Another todo', 'Some description...');
+          if (scrollController.offset != 0) {
+            scrollController.animateTo(
+              0.0,
+              duration: Duration(milliseconds: 300),
+              curve: Curves.bounceIn,
+            );
+          }
+        },
         child: Icon(Icons.add),
       ),
     );
