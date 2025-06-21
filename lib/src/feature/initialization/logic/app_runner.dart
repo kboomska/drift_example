@@ -24,13 +24,13 @@ class AppRunner {
 
         Future<void> launchApplication() async {
           try {
-            // Initialize dependencies.
+            // Initialize top-level dependencies.
             final database = AppDatabase();
 
             // Create the dependencies container.
             final dependencies = DependenciesContainer(database: database);
 
-            runApp(RootContext(dependenciesContainer: dependencies));
+            runApp(RootContext(dependencies: dependencies));
           } on Object catch (e, stackTrace) {
             log(
               '${clock.now()} Initialization failed',

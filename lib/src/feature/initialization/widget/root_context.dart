@@ -13,15 +13,15 @@ import 'package:flutter/material.dart';
 /// {@endtemplate}
 class RootContext extends StatelessWidget {
   /// {@macro app}
-  const RootContext({super.key, required this.dependenciesContainer});
+  const RootContext({super.key, required this.dependencies});
 
   /// Container with dependencies.
-  final DependenciesContainer dependenciesContainer;
+  final DependenciesContainer dependencies;
 
   @override
   Widget build(BuildContext context) {
     return DependenciesScope(
-      dependencies: dependenciesContainer,
+      dependencies: dependencies,
       child: MaterialContext(),
     );
   }
