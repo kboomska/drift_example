@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:clock/clock.dart';
-import 'package:drift_example/src/core/app_database/app_database.dart';
-import 'package:drift_example/src/feature/initialization/model/dependencies_container.dart';
+import 'package:drift_example/src/feature/initialization/logic/initialize_dependencies.dart'
+    as initialization;
 import 'package:drift_example/src/feature/initialization/widget/root_context.dart';
 import 'package:flutter/widgets.dart';
 
@@ -24,11 +24,8 @@ class AppRunner {
 
         Future<void> launchApplication() async {
           try {
-            // Initialize top-level dependencies.
-            final database = AppDatabase();
-
             // Create the dependencies container.
-            final dependencies = DependenciesContainer(database: database);
+            final dependencies = await initialization.$initializeDependencies();
 
             runApp(RootContext(dependencies: dependencies));
           } on Object catch (e, stackTrace) {

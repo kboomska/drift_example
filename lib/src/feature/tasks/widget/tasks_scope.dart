@@ -1,7 +1,5 @@
 import 'package:drift_example/src/feature/initialization/widget/dependencies_scope.dart';
 import 'package:drift_example/src/feature/tasks/controller/tasks_controller.dart';
-import 'package:drift_example/src/feature/tasks/data/tasks_data_source.dart';
-import 'package:drift_example/src/feature/tasks/data/tasks_repository.dart';
 import 'package:drift_example/src/feature/tasks/model/task_entity.dart';
 import 'package:flutter/widgets.dart';
 
@@ -44,12 +42,8 @@ class _TasksScopeState extends State<TasksScope> implements TasksState {
   @override
   void initState() {
     super.initState();
-    final database = DependenciesScope.of(context).database;
-    _tasksController = TasksController(
-      repository: TasksRepositoryImpl(
-        dataSource: TasksDataSourceImpl(database),
-      ),
-    );
+    final repository = DependenciesScope.of(context).tasksRepository;
+    _tasksController = TasksController(repository: repository);
   }
 
   @override
